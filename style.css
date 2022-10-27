@@ -1,0 +1,121 @@
+html {
+    font-size: 62.5%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    font-size: 2rem;
+}
+
+path,
+i,
+svg {
+    pointer-events: none;
+}
+
+.colors {
+    color: rgb(212, 212, 212);
+    min-height: 80vh;
+    display: flex;
+}
+
+.color {
+    position: relative;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.color h2 {
+    font-size: 3rem;
+    cursor: pointer;
+}
+
+.adjust,
+.lock {
+    font-size: 2.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 2rem 0;
+}
+
+.sliders {
+    position: absolute;
+    bottom: 0;
+    padding: 1.5rem;
+    background: white;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    background: rgb(255, 255, 255);
+    border-top-left-radius: 1.5rem;
+    opacity: 0;
+
+    /* We are adding adjustment class*/
+    transform: translateY(100px);
+    transition: all 0.5s ease-in-out;
+}
+.sliders.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
+.sliders button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.8rem;
+    border-top-left-radius: 1.5rem;
+    border-bottom-left-radius: 1.5rem;
+    border: none;
+    background: rgb(73, 73, 73);
+    color: #fff;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.panel {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 20vh;
+}
+
+.panel button {
+    font-size: 1.6rem;
+    margin: 1.6rem;
+    padding: 1.6rem 3.2rem;
+    background: rgb(31, 33, 63);
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 1.6rem;
+}
+.panel p {
+    font-size: 1.8rem;
+}
+
+.library-panel, 
+.generate-panel, 
+.save-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
