@@ -24,17 +24,18 @@ svg {
     color: rgb(212, 212, 212);
     min-height: 80vh;
     display: flex;
+    flex-wrap: wrap;
 }
 
 .color {
+    overflow: hidden;
     position: relative;
     height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    flex-grow: 1;
-    overflow: hidden;
+    flex: 1 0 350px;
 }
 
 .color h2 {
