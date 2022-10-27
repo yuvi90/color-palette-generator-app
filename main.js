@@ -69,13 +69,14 @@ function hslControls(e) {
     let lum = sliders[1];
     let sat = sliders[2];
 
-    let currentDivColor = colorDivs[index].children[0].innerText;
-    let color = chroma(currentDivColor)
+    let currentDivColorText = colorDivs[index].children[0];
+    let color = chroma(currentDivColorText.innerText)
         .set('hsl.h', hue.value)
         .set('hsl.l', lum.value)
         .set('hsl.s', sat.value);
-
     colorDivs[index].style.backgroundColor = color;
+    currentDivColorText.innerText = chroma(color).hex();
+    checkContrast(currentDivColorText.innerText, currentDivColorText);
 }
 
 function handleColorEvents(e) {
