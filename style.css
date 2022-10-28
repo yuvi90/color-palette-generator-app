@@ -23,7 +23,7 @@ svg {
 
 .colors {
     color: rgb(212, 212, 212);
-    min-height: 80vh;
+    min-height: 70vh;
     display: flex;
     /* flex-wrap: wrap; */
 }
@@ -31,7 +31,7 @@ svg {
 .color {
     overflow: hidden;
     position: relative;
-    height: 80vh;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -94,6 +94,7 @@ input[type="range"] {
     position: relative;
     border-radius: 1.6rem;
     cursor: pointer;
+    border: 1px solid #000;
 }
 
 .controls {
@@ -105,7 +106,7 @@ input[type="range"] {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    height: 20vh;
+    height: 30vh;
 }
 
 .panel button {
@@ -128,4 +129,110 @@ input[type="range"] {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.copy-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /* background: rgba(0, 0, 0, 0.7); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+}
+.copy-container.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.copy-popup {
+    background: #fff;
+    min-height: 10rem;
+    min-width: 30rem;
+    padding: 5rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    transform: translateY(3rem);
+    transition: transform 0.8s ease;
+}
+.copy-popup h4 {
+    font-size: 3rem;
+}
+.copy-popup.active {
+    transform: translateY(0);
+}
+
+
+.save-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.save-popup {
+    position: relative;
+    background: #fff;
+    min-height: 10rem;
+    min-width: 30rem;
+    padding: 5rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.close-save,
+.close-library {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    cursor: pointer;   
+}
+
+.library-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.library-popup {
+    position: relative;
+    background: #fff;
+    min-height: 10rem;
+    min-width: 30rem;
+    padding: 5rem;
+    border-radius: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
 }

@@ -1,63 +1,107 @@
-// Selectors
-const colorDivs = document.querySelectorAll('.color');
-const generateBtn = document.querySelector('.generate');
-const sliders = document.querySelectorAll('input[type="range"]');
+//------------------------------------------------------------------Selectors
 
-// Funtions
+const colorDivs = document.querySelectorAll('.color');
+const sliders = document.querySelectorAll('input[type="range"]');
+const generateBtn = document.querySelector('.generate');
+const popup = document.querySelector('.copy-container');
+let initialColors = [];
+
+//------------------------------------------------------------------Event Listeners
+
+generateBtn.addEventListener('click', () => {
+    initialColors = [];
+    generateColors();
+});
+
+sliders.forEach(slider => {
+    slider.addEventListener('input', hslControls);
+});
+
+colorDivs.forEach(div => {
+    div.addEventListener('click', handleColorDivEvents);
+    div.children[0].addEventListener('click', copyText);
+});
+
+popup.addEventListener('transitionend', removeClipboardmsg);
+
+//------------------------------------------------------------------Funtions
+
+//--Generate Random Color
 function randomColor() {
     return chroma.random();
 }
 
-function checkContrast(color, text) {
-    if (chroma(color).luminance() > 0.5) {
-        text.style.color = '#000'
-    }
-    else {
-        text.style.color = '#fff'
-    };
-}
-
+//--Generate Colors and Colorize Divs
 function generateColors() {
     colorDivs.forEach((div) => {
         // Generate Random Color
-        const color = randomColor();
+        const color = chroma(randomColor()).hex();
+        // Push colors to intial array
+        initialColors.push(color);
         // Fill background color with random color
         div.style.backgroundColor = color;
-        // Update hex in the title
-        const divTitle = div.children[0];
-        divTitle.innerText = color;
-        // Update color of text according to luminance of color
-        checkContrast(color, divTitle);
+        // Update hex in the text
+        const HexText = div.children[0];
+        HexText.innerText = color;
+        // Update color of text, icons according to luminance of color
+        const icons = div.querySelectorAll('.controls button');
+        checkContrast(color, HexText, icons);
         // Colorize Sliders
         const sliders = div.querySelectorAll('.sliders input');
         const hue = sliders[0];
         const lum = sliders[1];
         const sat = sliders[2];
         colorizeSliders(color, hue, lum, sat);
-
+        // Set values to sliders
+        const hueValue = Math.floor(chroma(color).get('hsl.h'));
+        const satValue = Math.floor(chroma(color).get('hsl.s')*100)/100;
+        const lumValue = Math.floor(chroma(color).get('hsl.l')*100)/100;
+        hue.value = hueValue;
+        sat.value = satValue;
+        lum.value = lumValue;
     });
 }
 
+//--Check Contrast and updates Text & Icons color
+function checkContrast(color, text, icons) {
+    if (chroma(color).luminance() > 0.5) {
+        text.style.color = '#000';
+        icons[0].style.color = '#000';
+        icons[1].style.color = '#000';
+    }
+    else {
+        text.style.color = '#fff';
+        icons[0].style.color = '#fff';
+        icons[1].style.color = '#fff';
+    };
+}
+
+//--Colorize sliders with current color on div
 function colorizeSliders(color, hue, lum, sat) {
 
-    // Hue Scale
-    hue.style.backgroundImage = `linear-gradient(to right, rgb(204,75,75), rgb(204,204,75), rgb(75,204,75), rgb(75,204,204), rgb(75,75,204), rgb(204,75,204), rgb(204,75,75))`
+    //-- Hue Scale
+    hue.style.backgroundImage = 
+    `linear-gradient(to right, rgb(204,75,75), rgb(204,204,75), rgb(75,204,75), 
+        rgb(75,204,204), rgb(75,75,204), rgb(204,75,204), rgb(204,75,75))`
 
-    // Brightness Scale
+    //-- Brightness Scale
     const midBright = chroma(color).set('hsl.l', 0.5);
     const scaleBright = chroma.scale(['black', midBright, 'white']);
 
-    lum.style.backgroundImage = `linear-gradient(to right, ${scaleBright(0)}, ${scaleBright(0.5)}, ${scaleBright(1)})`
+    lum.style.backgroundImage = 
+    `linear-gradient(to right, ${scaleBright(0)}, ${scaleBright(0.5)}, ${scaleBright(1)})`
 
-    // Saturation Scale
+    //-- Saturation Scale
     const noSat = chroma(color).set('hsl.s', 0);
     const fullSat = chroma(color).set('hsl.s', 1);
     const scaleSet = chroma.scale([noSat, color, fullSat]);
 
-    sat.style.backgroundImage = `linear-gradient(to right, ${scaleSet(0)}, ${scaleSet(1)})`
+    sat.style.backgroundImage = 
+    `linear-gradient(to right, ${scaleSet(0)}, ${scaleSet(1)})`
 
 };
 
+//--Slider Events Handler
 function hslControls(e) {
     const index =
         e.target.getAttribute('data-hue') ||
@@ -69,17 +113,26 @@ function hslControls(e) {
     let lum = sliders[1];
     let sat = sliders[2];
 
-    let currentDivColorText = colorDivs[index].children[0];
-    let color = chroma(currentDivColorText.innerText)
+    let currentDivHexText = colorDivs[index].children[0];
+    let currentDivicons = colorDivs[index].querySelectorAll('.controls button');
+    let color = chroma(initialColors[index])
         .set('hsl.h', hue.value)
         .set('hsl.l', lum.value)
         .set('hsl.s', sat.value);
+    // Updating color to div
     colorDivs[index].style.backgroundColor = color;
-    currentDivColorText.innerText = chroma(color).hex();
-    checkContrast(currentDivColorText.innerText, currentDivColorText);
+    // Updating hex text and color UI
+    currentDivHexText.innerText = chroma(color).hex();
+    checkContrast(currentDivHexText.innerText, currentDivHexText, currentDivicons);
+
+    // Reset sliders colors scale
+    colorizeSliders(color, hue, lum, sat);
 }
 
-function handleColorEvents(e) {
+//--Events handler inside color div 
+function handleColorDivEvents(e) {
+
+    //-- Toggle Sliders
     if (e.target.classList.contains('adjust')) {
         const currentSlider = e.target.parentElement.nextElementSibling;
         currentSlider.classList.add('active');
@@ -88,18 +141,28 @@ function handleColorEvents(e) {
     if (e.target.classList.contains('close-adjustments')) {
         e.target.parentElement.classList.remove('active');
     }
-    // console.log(e.target);
+
 }
 
-// Event Listeners
-generateBtn.addEventListener('click', generateColors);
+//-- Copy hex code
+function copyText(e) {
+    const tempTextArea = document.createElement('textarea');
+    tempTextArea.value = e.target.innerText;
+    document.body.appendChild(tempTextArea);
+    tempTextArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextArea);
 
-sliders.forEach(slider => {
-    slider.addEventListener('input', hslControls);
-});
+    // popup animation
+    popup.classList.add('active');
+    popup.children[0].classList.add('active');
+}
 
-colorDivs.forEach(div => {
-    div.addEventListener('click', handleColorEvents)
-});
+//-- Remove ClipBoard msg
+function removeClipboardmsg() {
+    popup.classList.remove('active');
+    popup.children[0].classList.remove('active');
+}
 
+// Initial Call
 generateColors();
