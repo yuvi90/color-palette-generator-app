@@ -218,11 +218,35 @@ function savePalette(e) {
         colors.push(div.children[0].innerText);
     });
     //Generate palette object
-    let paletteNr = (savedPalettes.length + 1);
+    let paletteNr = savedPalettes.length;
     const paletteObj = { id: paletteNr, name: name, colors: colors }
     savedPalettes.push(paletteObj);
     savetoLocal(paletteObj);
     saveInput.value = '';
+
+    // create library palette
+    const libraryContainer = document.querySelector('.library-popup');
+    const paletteContainer = document.createElement('div');
+    paletteContainer.classList.add('palette-container');
+    const paletteName = document.createElement('h4');
+    paletteName.classList.add('palette-name');
+    paletteName.innerText = name;
+    const paletteColorContainer = document.createElement('div');
+    paletteColorContainer.classList.add('palette-color-wrapper');
+    paletteObj.colors.forEach( smallColor => {
+        const paletteColor = document.createElement('div');
+        paletteColor.classList.add('palette-color');
+        paletteColor.style.background = smallColor;
+        paletteColorContainer.appendChild(paletteColor);
+    });
+    const paletteBtn = document.createElement('button');
+    paletteBtn.classList.add('palette-btn');
+    paletteBtn.innerText = 'Select';
+    paletteContainer.appendChild(paletteName);
+    paletteContainer.appendChild(paletteColorContainer);
+    paletteContainer.appendChild(paletteBtn);
+    libraryContainer.appendChild(paletteContainer);
+
 }
 
 function savetoLocal(palette) {
@@ -255,5 +279,6 @@ function closelibrary(e) {
     popup.classList.remove('active');
 }
 
+localStorage.clear();
 // Initial Call
 generateColors();
